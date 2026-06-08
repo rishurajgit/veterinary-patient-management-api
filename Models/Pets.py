@@ -1,4 +1,4 @@
-from sqlalchemy import Integer, String, Column, DateTime
+from sqlalchemy import Integer, String, Column, DateTime, TIMESTAMP
 from sqlalchemy.orm import relationship
 from database import Base
 
@@ -12,4 +12,4 @@ class pet(Base):
     Age = Column(String)
     Owner_name = Column(String)
     Owner_phone = Column(String)
-    Created_at = Column(DateTime)
+    Created_at = Column(TIMESTAMP)
