@@ -1,5 +1,7 @@
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, declarative_base  #(Creates a base class for all database tables.)
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import declarative_base  #(Creates a base class for all database tables.)
+
 
 DATABASE_URL = "sqlite:///./test.db"  #WHERE THE DATABASE IS
 
@@ -20,8 +22,9 @@ Base = declarative_base()  #Creates a parent class for all models.
 #Dependencies functions:
 
 def get_db():
-    db = SessionLocal()
+    db = SessionLocal() 
     try:
         yield db
     finally:
         db.close()
+        
