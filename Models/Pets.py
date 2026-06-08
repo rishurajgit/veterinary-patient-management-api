@@ -9,7 +9,7 @@ class pet(Base):
     Name = Column(String)
     Species = Column(String)
     Breed = Column(String)
-    Age = Column(String)
+    Age = Column(Integer)
     Owner_name = Column(String)
     Owner_phone = Column(String)
     Created_at = Column(TIMESTAMP)
