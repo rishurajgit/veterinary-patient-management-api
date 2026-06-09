@@ -1,6 +1,7 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, TIMESTAMP, DateTime, Text
+from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Text
 from sqlalchemy.orm import relationship
 from database import Base
+from datetime import datetime
 
 
 class Visit(Base):
@@ -10,4 +11,4 @@ class Visit(Base):
     Visit_date = Column(DateTime)
     Reason = Column(String)
     Notes = Column(Text)
-    Created_at = Column(TIMESTAMP)
+    Created_at = Column(DateTime, default = datetime.utcnow)
