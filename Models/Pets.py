@@ -1,6 +1,7 @@
-from sqlalchemy import Integer, String, Column, DateTime, TIMESTAMP
+from sqlalchemy import Integer, String, Column, DateTime
 from sqlalchemy.orm import relationship
 from database import Base
+from datetime import datetime
 
 
 class pet(Base):
@@ -9,7 +10,7 @@ class pet(Base):
     Name = Column(String)
     Species = Column(String)
     Breed = Column(String)
-    Age = Column(Integer)
+    Age = Column(String)
     Owner_name = Column(String)
     Owner_phone = Column(String)
-    Created_at = Column(TIMESTAMP)
+    Created_at = Column(DateTime, default = datetime.utcnow)
