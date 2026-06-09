@@ -1,6 +1,9 @@
-def main():
-    print("Hello from project-vet-api!")
+from fastapi import FastAPI
+from database import engine, Base
+from Models.Pets import pet
+from Models.Visit import Visit
 
+app = FastAPI()
 
-if __name__ == "__main__":
-    main()
+Base.metadata.create_all(bind = engine)
+
