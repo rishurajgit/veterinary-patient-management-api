@@ -5,3 +5,4 @@ test.db
 uv.lock
 .env
 .vscode/
+README.md
