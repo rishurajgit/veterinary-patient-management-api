@@ -27,3 +27,13 @@ def create_pet(db: Session, pet_data: PetCreate):
         status_code=500,
         detail=str(e)
     )
+        
+def get_all_pets(db: Session):
+    try:
+        pets = db.query(pet).all()
+        return pets
+    except Exception as e:
+        raise HTTPException(
+            status_code = 500,
+            detail = str(e)
+        )
