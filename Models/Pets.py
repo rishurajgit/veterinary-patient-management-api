@@ -7,7 +7,7 @@ from datetime import datetime
 class pet(Base):
     __tablename__ = "PET DETAILS"
     ID = Column(Integer, index = True, primary_key = True)
-    Name = Column(String)
+    Pet_Name = Column(String)
     Species = Column(String)
     Breed = Column(String)
     Age = Column(String)

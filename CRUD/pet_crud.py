@@ -50,3 +50,47 @@ def get_pet_by_id(db, pet_id:int):
         )
         
     return pet_data
+
+
+def update_pet(db, pet_id: int, pet_data: PetCreate):
+    
+    pet_to_update = db.query(pet).filter(
+        pet.ID == pet_id).first()
+
+    if pet_to_update is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Pet not found"
+        )
+
+    pet_to_update.Pet_Name = pet_data.PetName
+    pet_to_update.Species = pet_data.Species
+    pet_to_update.Breed = pet_data.Breed
+    pet_to_update.Age = pet_data.Age
+    pet_to_update.Owner_name = pet_data.Owner_name
+    pet_to_update.Owner_phone = pet_data.Owner_phone
+
+    db.commit()
+    db.refresh(pet_to_update)
+
+    return pet_to_update
+
+
+def delete_pet(db, pet_id: int):
+    
+    pet_to_delete = db.query(pet).filter(
+        pet.ID == pet_id
+    ).first()
+
+    if pet_to_delete is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Pet not found"
+        )
+
+    db.delete(pet_to_delete)
+    db.commit()
+
+    return {
+        "message": "Pet deleted successfully"
+        }
