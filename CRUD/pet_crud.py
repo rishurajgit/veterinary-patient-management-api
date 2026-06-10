@@ -37,3 +37,16 @@ def get_all_pets(db: Session):
             status_code = 500,
             detail = str(e)
         )
+        
+def get_pet_by_id(db, pet_id:int):
+    pet_data = db.query(pet).filter(pet.ID == pet_id).first()
+    
+    
+    
+    if pet_data is None:
+        raise HTTPException(
+            status = 404,
+            detail= "pet not found: Try Again"
+        )
+        
+    return pet_data
