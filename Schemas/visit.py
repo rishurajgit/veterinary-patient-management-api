@@ -10,7 +10,8 @@ class VisitCreate(BaseModel):
     
 class VisitResponse(VisitCreate):
     
-    Pet_id : int = Field(min_length = 1, max_length = 100)
+    
+    Pet_id : int
     id: int
     Created_at: datetime
     
