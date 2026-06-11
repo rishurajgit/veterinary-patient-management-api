@@ -34,3 +34,14 @@ def create_visit(
             status_code=500,
             detail=str(e)
         )
+        
+def get_visits_by_pet_id(db: Session, pet_id: int):
+    visits = db.query(Visit).filter(Visit.Pet_id == pet_id).all()  #Get all visit of pets
+    
+    if len(visits)== 0:  #if no visit found
+        raise HTTPException(
+            status_code = 404,
+            details = "No Visit Records Found For The Specific Pet"
+        )
+        
+    return visits
