@@ -9,7 +9,9 @@ from CRUD.pet_crud import  get_all_pets
 from CRUD.pet_crud import get_pet_by_id
 from CRUD.pet_crud import update_pet
 from CRUD.pet_crud import delete_pet
-
+from CRUD.visit_crud import create_visit
+from Schemas.visit import VisitCreate
+from CRUD.visit_crud import get_visits_by_pet_id
 
 
 
@@ -59,3 +61,22 @@ def delete_pet_data(
     db: Session = Depends(get_db)
 ):
     return delete_pet(db, pet_id)
+
+
+@app.post("/pets/{pet_id}/visits", tags =["Visits"])
+def create_visit_data(
+    pet_id: int,
+    visit: VisitCreate,
+    db: Session = Depends(get_db)
+):
+
+    return create_visit(
+        db,
+        pet_id,
+        visit
+    )
+    
+    
+@app.get("/pets/{pet_id}/visits", tags =["Visits"])
+def get_pet_visits(pet_id:int, db: Session = Depends(get_db)): # Get database session
+    return get_visits_by_pet_id(db, pet_id)
