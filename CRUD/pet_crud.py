@@ -2,6 +2,9 @@ from fastapi import HTTPException
 from sqlalchemy.orm import Session
 from Models.Pets import pet
 from Schemas.pet import PetCreate
+from Models.Visit import Visit
+
+
 
 def create_pet(db: Session, pet_data: PetCreate):
     try:
@@ -88,9 +91,13 @@ def delete_pet(db, pet_id: int):
             detail="Pet not found"
         )
 
+    db.query(Visit).filter(
+        Visit.Pet_id == pet_id
+    ).delete()
+
+    # Delete pet
     db.delete(pet_to_delete)
     db.commit()
-
     return {
-        "message": "Pet deleted successfully"
-        }
+        "message": "Pet and related visits deleted successfully"
+    }
