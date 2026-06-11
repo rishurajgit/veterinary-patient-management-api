@@ -1,7 +1,7 @@
 [project]
 name = "project-vet-api"
 version = "0.1.0"
-description = "Add your description here"
+description = "Veterinary Patient Management API built with FastAPI and SQLAlchemy."
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
