@@ -2,17 +2,17 @@ from pydantic import BaseModel, Field
 from datetime import datetime
 
 class PetCreate(BaseModel):
-    PetName : str = Field(min_length = 1, max_length = 15)
-    Species : str = Field(min_length = 1, max_length = 10)
-    Breed : str = Field(min_length = 1, max_lenght = 20)
-    Age : int
-    Owner_name: str = Field(min_length = 1, max_length = 20)
-    Owner_phone : str = Field(min_length =10, max_length = 10)
+    petname : str 
+    species : str 
+    breed : str 
+    age : int
+    owner_name: str 
+    owner_phone : str 
     
     
 class PetResponse(PetCreate):
-    id: int = Field(min_length = 1, max_length = 10000)
-    Created_at : datetime
+    id: int
+    created_at : datetime
     
     class Config: # Allows response from SQLAlchemy models
         from_attribute = True
