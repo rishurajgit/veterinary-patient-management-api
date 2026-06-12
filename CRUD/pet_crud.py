@@ -1,6 +1,6 @@
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
-from Models.Pets import pet
+from Models.Pets import Pet
 from Schemas.pet import PetCreate
 from Models.Visit import Visit
 
@@ -9,13 +9,13 @@ from Models.Visit import Visit
 def create_pet(db: Session, pet_data: PetCreate):
     try:
         #Create pet object
-        new_pet = pet(
-        Pet_Name = pet_data.PetName,
-        Species = pet_data.Species,
-        Breed = pet_data.Breed,
-        Age = pet_data.Age,
-        Owner_name = pet_data.Owner_name,
-        Owner_phone = pet_data.Owner_phone
+        new_pet = Pet(
+        pet_name = pet_data.petname,
+        species = pet_data.species,
+        breed = pet_data.breed,
+        age = pet_data.age,
+        owner_name = pet_data.owner_name,
+        owner_phone = pet_data.owner_phone
             
         )
         
@@ -33,7 +33,7 @@ def create_pet(db: Session, pet_data: PetCreate):
         
 def get_all_pets(db: Session):
     try:
-        pets = db.query(pet).all()
+        pets = db.query(Pet).all()
         return pets
     except Exception as e:
         raise HTTPException(
@@ -42,13 +42,13 @@ def get_all_pets(db: Session):
         )
         
 def get_pet_by_id(db, pet_id:int):
-    pet_data = db.query(pet).filter(pet.ID == pet_id).first()
+    pet_data = db.query(Pet).filter(Pet.id == pet_id).first()
     
     
     
     if pet_data is None:
         raise HTTPException(
-            status = 404,
+            status_code = 404,
             detail= "pet not found: Try Again"
         )
         
@@ -57,8 +57,8 @@ def get_pet_by_id(db, pet_id:int):
 
 def update_pet(db, pet_id: int, pet_data: PetCreate):
     
-    pet_to_update = db.query(pet).filter(
-        pet.ID == pet_id).first()
+    pet_to_update = db.query(Pet).filter(
+        Pet.id == pet_id).first()
 
     if pet_to_update is None:
         raise HTTPException(
@@ -66,12 +66,12 @@ def update_pet(db, pet_id: int, pet_data: PetCreate):
             detail="Pet not found"
         )
 
-    pet_to_update.Pet_Name = pet_data.PetName
-    pet_to_update.Species = pet_data.Species
-    pet_to_update.Breed = pet_data.Breed
-    pet_to_update.Age = pet_data.Age
-    pet_to_update.Owner_name = pet_data.Owner_name
-    pet_to_update.Owner_phone = pet_data.Owner_phone
+    pet_to_update.pet_Name = pet_data.petname
+    pet_to_update.species = pet_data.species
+    pet_to_update.breed = pet_data.breed
+    pet_to_update.age = pet_data.age
+    pet_to_update.owner_name = pet_data.owner_name
+    pet_to_update.owner_phone = pet_data.owner_phone
 
     db.commit()
     db.refresh(pet_to_update)
@@ -81,8 +81,8 @@ def update_pet(db, pet_id: int, pet_data: PetCreate):
 
 def delete_pet(db, pet_id: int):
     
-    pet_to_delete = db.query(pet).filter(
-        pet.ID == pet_id
+    pet_to_delete = db.query(Pet).filter(
+        Pet.id == pet_id
     ).first()
 
     if pet_to_delete is None:
@@ -92,7 +92,7 @@ def delete_pet(db, pet_id: int):
         )
 
     db.query(Visit).filter(
-        Visit.Pet_id == pet_id
+        Visit.pet_id == pet_id
     ).delete()
 
     # Delete pet

@@ -15,10 +15,10 @@ def create_visit(
 
         # Create visit object
         new_visit = Visit(
-            Pet_id=pet_id,
-            Visit_date=visit_data.Visit_date,
-            Reason=visit_data.Reason,
-            Notes=visit_data.Notes
+            pet_id=pet_id,
+            visit_date=visit_data.visit_date,
+            reason=visit_data.reason,
+            notes=visit_data.notes
         )
 
         # Save to database
