@@ -4,16 +4,16 @@ from datetime import datetime
 
 class VisitCreate(BaseModel):
     
-    Visit_date : datetime 
-    Reason : str = Field(min_length = 1, max_length = 500)
-    Notes: str = Field(min_length = 1, max_length = 500)
+    visit_date : datetime 
+    reason : str 
+    notes: str 
     
 class VisitResponse(VisitCreate):
     
     
-    Pet_id : int
+    pet_id : int
     id: int
-    Created_at: datetime
+    created_at: datetime
     
     class Config:
         from_attributes = True  #Read data from SQLalchemy model
