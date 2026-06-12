@@ -4,13 +4,15 @@ from database import Base
 from datetime import datetime
 
 
-class pet(Base):
+class Pet(Base):
     __tablename__ = "PET DETAILS"
-    ID = Column(Integer, index = True, primary_key = True)
-    Pet_Name = Column(String)
-    Species = Column(String)
-    Breed = Column(String)
-    Age = Column(String)
-    Owner_name = Column(String)
-    Owner_phone = Column(String)
-    Created_at = Column(DateTime, default = datetime.utcnow)
+    id = Column(Integer, index = True, primary_key = True)
+    pet_name = Column(String)
+    species = Column(String)
+    breed = Column(String)
+    age = Column(String)
+    owner_name = Column(String)
+    owner_phone = Column(String)
+    created_at = Column(DateTime, default = datetime.utcnow)
+    
+    visits = relationship("Visit", back_populates="Pet")
