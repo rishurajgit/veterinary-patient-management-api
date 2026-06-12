@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Depends
 from sqlalchemy.orm import Session
 from database import engine, Base, get_db
-from Models.Pets import pet
+from Models.Pets import Pet
 from Models.Visit import Visit
 from Schemas.pet import PetCreate, PetResponse
 from CRUD.pet_crud import create_pet as create_pet_db

@@ -6,9 +6,11 @@ from datetime import datetime
 
 class Visit(Base):
     __tablename__ = "VISIT OF PETS"
-    ID = Column(Integer, primary_key = True, index = True)
-    Pet_id = Column(Integer, ForeignKey("PET DETAILS.ID"))
-    Visit_date = Column(DateTime)
-    Reason = Column(String)
-    Notes = Column(Text)
-    Created_at = Column(DateTime, default = datetime.utcnow)
+    id = Column(Integer, primary_key = True, index = True)
+    pet_id = Column(Integer, ForeignKey("PET DETAILS.id"))
+    visit_date = Column(DateTime)
+    reason = Column(String)
+    notes = Column(Text)
+    created_at = Column(DateTime, default = datetime.utcnow)
+    
+    Pet = relationship("Pet", back_populates="visits")
