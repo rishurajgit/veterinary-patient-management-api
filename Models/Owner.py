@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, DateTime
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
 from database import Base
 from datetime import datetime
 from sqlalchemy.orm import relationship
@@ -13,4 +13,4 @@ class Owner(Base):
     created_at = Column(DateTime, default = datetime.utcnow)
     
     #one Owner can have many pets
-    pets = relationship("Pet", back_populates="Owner")
+    pets = relationship("Pet", back_populates="owner")

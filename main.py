@@ -12,7 +12,9 @@ from CRUD.pet_crud import delete_pet
 from CRUD.visit_crud import create_visit
 from Schemas.visit import VisitCreate
 from CRUD.visit_crud import get_visits_by_pet_id
-
+from Models.Owner import Owner
+from Schemas.owner import OwnerCreate
+from CRUD.owner_crud import create_owner
 
 
 
@@ -80,3 +82,14 @@ def create_visit_data(
 @app.get("/pets/{pet_id}/visits", tags =["Visits"])
 def get_pet_visits(pet_id:int, db: Session = Depends(get_db)): # Get database session
     return get_visits_by_pet_id(db, pet_id)
+
+
+
+@app.post("/Owners", tags =["Owners"])
+def create_owner_data(
+    owner: OwnerCreate,
+    db : Session = Depends(get_db)
+):
+    return{
+        create_owner(db, owner)
+    }
