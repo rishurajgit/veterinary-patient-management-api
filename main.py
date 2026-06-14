@@ -15,7 +15,7 @@ from CRUD.visit_crud import get_visits_by_pet_id
 from Models.Owner import Owner
 from Schemas.owner import OwnerCreate
 from CRUD.owner_crud import create_owner
-
+from CRUD.owner_crud import get_pets_by_owner_id
 
 
 
@@ -93,3 +93,9 @@ def create_owner_data(
     return{
         create_owner(db, owner)
     }
+    
+    
+@app.get("/Owners/{owner_id}/pets")
+def get_owner_pets(owner_id:int, db: Session = Depends(get_db)):
+    
+    return get_pets_by_owner_id(db, owner_id)
