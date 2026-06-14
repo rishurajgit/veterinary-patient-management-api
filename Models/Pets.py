@@ -10,7 +10,7 @@ class Pet(Base):
     pet_name = Column(String)
     species = Column(String)
     breed = Column(String)
-    age = Column(String)
+    age = Column(Integer)
     # owner_name = Column(String)
     # owner_phone = Column(String)
     
