@@ -13,6 +13,9 @@ class Pet(Base):
     age = Column(String)
     # owner_name = Column(String)
     # owner_phone = Column(String)
+    
+    owner_id = Column(Integer, ForeignKey("Owner Details.id"))  #Replacing owner name and phone with id
+    
     created_at = Column(DateTime, default = datetime.utcnow)
     
     #one pet can have many visits

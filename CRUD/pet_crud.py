@@ -14,9 +14,9 @@ def create_pet(db: Session, pet_data: PetCreate):
         species = pet_data.species,
         breed = pet_data.breed,
         age = pet_data.age,
-        owner_name = pet_data.owner_name,
-        owner_phone = pet_data.owner_phone
-            
+        # owner_name = pet_data.owner_name,
+        # owner_phone = pet_data.owner_phone
+        owner_id = pet_data.owner_id
         )
         
         #Adding pet to data base

@@ -6,9 +6,9 @@ class PetCreate(BaseModel):
     species : str 
     breed : str 
     age : int
-    owner_name: str 
-    owner_phone : str 
-    
+    # owner_name: str 
+    # owner_phone : str 
+    owner_id: int
     
 class PetResponse(PetCreate):
     id: int
