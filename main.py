@@ -34,9 +34,16 @@ def create_pet(
     
 @app.get("/pets", tags=["Pets"])
 def get_pets(
+    species: str = None,
+    breed: str = None,
+    min_age: int = None,
+    max_age: int = None,
+    owner_id: int = None,
+    search: str = None,
     db: Session = Depends(get_db)
 ):
-    return get_all_pets(db)
+    
+    return get_all_pets(db, species, breed, min_age, max_age, owner_id, search)
 
 
 @app.get("/pets/{pet_id}", tags=["Pets"])
@@ -95,7 +102,7 @@ def create_owner_data(
     }
     
     
-@app.get("/Owners/{owner_id}/pets")
+@app.get("/Owners/{owner_id}/pets", tags =["Owners"])
 def get_owner_pets(owner_id:int, db: Session = Depends(get_db)):
     
     return get_pets_by_owner_id(db, owner_id)

@@ -30,11 +30,41 @@ def create_pet(db: Session, pet_data: PetCreate):
         status_code=500,
         detail=str(e)
     )
-        
-def get_all_pets(db: Session):
+    
+# retrieves all pets and apply the filter     
+def get_all_pets(
+    db: Session,
+    species: str = None,
+    breed: str = None,
+    min_age: int = None,
+    max_age: int = None,
+    owner_id: int = None,
+    search: str = None ):
     try:
-        pets = db.query(Pet).all()
-        return pets
+        # pets = db.query(Pet).all()
+        # return pets
+        query = db.query(Pet)  #Create the base query for the pet table
+        if species:
+            query = query.filter(Pet.species == species)
+            
+        if breed:
+            query = query.filter(Pet.breed == breed)
+            
+        if min_age:
+            query = query.filter(Pet.age >= min_age)
+            
+        if max_age:
+            query = query.filter(Pet.age <= max_age)
+            
+        if owner_id:
+            query = query.filter(Pet.owner_id == owner_id)
+            
+        if search:
+            query = query.filter(
+                Pet.pet_name.ilike(f"%{search}%")  #search pets by name case insensitive
+            )
+            
+        return query.all()
     except Exception as e:
         raise HTTPException(
             status_code = 500,
