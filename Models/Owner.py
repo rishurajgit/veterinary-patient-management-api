@@ -11,6 +11,8 @@ class Owner(Base):
     phone = Column(String)
     email = Column(String, unique=True) #for unique email ids
     created_at = Column(DateTime, default = datetime.utcnow)
+    # stores when owner data was last updated
+    updated_at = Column(DateTime,default=datetime.utcnow,onupdate=datetime.utcnow)
     
     #one Owner can have many pets
     pets = relationship("Pet", back_populates="owner")

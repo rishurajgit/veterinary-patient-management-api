@@ -1,7 +1,8 @@
 from sqlalchemy.orm import Session
 from Models.Owner import Owner
 from Schemas.owner import OwnerCreate
-
+from Models.Pets import Pet
+from fastapi import HTTPException
 
 #recieves validated data from the schema
 
@@ -17,3 +18,20 @@ def create_owner(db:Session, owner: OwnerCreate):
     db.refresh(new_owner)
     
     return new_owner
+
+
+def get_pets_by_owner_id(db: Session, owner_id: int):
+    
+    # pets = db.query(Pet).filter(Pet.owner_id == owner_id).all() #Get pet details by owner id
+    pets = db.query(Pet).filter(
+    Pet.owner_id == owner_id,
+    Pet.is_deleted == False).all()  #only return active pets for the owner
+    
+    
+    if len(pets) == 0:
+        raise HTTPException(
+            status_code=404,
+            detail="No pets found for this owner"
+        )
+
+    return pets
