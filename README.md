@@ -32,3 +32,36 @@ A FastAPI-based REST API for managing veterinary patients, visit records, and cl
 ### Visit Management
 - POST /pets/{id}/visits
 - GET /pets/{id}/visits
+
+## Phase 2 Features
+
+### Owner Management
+- Owner Entity
+- One-to-Many Relationship
+
+### Advanced Pet Filtering & Search
+- Species Filter
+- Breed Filter
+- Age Filter
+- Search by Name
+
+### Pagination & Sorting
+- Page & Limit
+- Sort by Name
+- Sort by Age
+
+### Visit Management Extensions
+- Update Visit
+- Delete Visit
+
+### Soft Delete
+- is_deleted
+- deleted_at
+
+### Audit Fields
+- created_at
+- updated_at
+
+### Global Exception Handling
+
+### Request Logging Middleware
