@@ -16,10 +16,25 @@ from Models.Owner import Owner
 from Schemas.owner import OwnerCreate
 from CRUD.owner_crud import create_owner
 from CRUD.owner_crud import get_pets_by_owner_id
-
+from fastapi import Request
+from fastapi.responses import JSONResponse
+from fastapi.exceptions import HTTPException
 
 
 app = FastAPI()
+
+@app.exception_handler(HTTPException)
+async def custom_http_exception_handler(
+    request: Request,
+    exc: HTTPException
+):
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={
+            "success": False,
+            "message": exc.detail
+        }
+    )
 
 Base.metadata.create_all(bind = engine)
 

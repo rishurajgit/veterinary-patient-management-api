@@ -2,6 +2,7 @@ from sqlalchemy.orm import Session
 from Models.Owner import Owner
 from Schemas.owner import OwnerCreate
 from Models.Pets import Pet
+from fastapi import HTTPException
 
 #recieves validated data from the schema
 
@@ -26,4 +27,11 @@ def get_pets_by_owner_id(db: Session, owner_id: int):
     Pet.owner_id == owner_id,
     Pet.is_deleted == False).all()  #only return active pets for the owner
     
+    
+    if len(pets) == 0:
+        raise HTTPException(
+            status_code=404,
+            detail="No pets found for this owner"
+        )
+
     return pets
