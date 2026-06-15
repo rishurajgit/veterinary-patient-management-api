@@ -39,7 +39,11 @@ def get_all_pets(
     min_age: int = None,
     max_age: int = None,
     owner_id: int = None,
-    search: str = None ):
+    search: str = None,
+    page: int = 1,
+    limit: int = 10,
+    sort_by: str = None,
+    sort_order: str = "asc"):
     try:
         # pets = db.query(Pet).all()
         # return pets
@@ -63,7 +67,32 @@ def get_all_pets(
             query = query.filter(
                 Pet.pet_name.ilike(f"%{search}%")  #search pets by name case insensitive
             )
+        #SORTING
+        if sort_by == "pet_name":
+            if sort_order == "desc":
+                query = query.order_by(Pet.pet_name.desc())
+            else:
+                query = query.order_by(Pet.pet_name.asc())
+                
+                
+        elif sort_by == "age":
+            if sort_order == "desc":
+                query = query.order_by(Pet.age.desc())
+            else:
+                query = query.order_by(Pet.age.asc())
+
+
+        elif sort_by == "created_at":       
+
+            if sort_order == "desc":
+                query = query.order_by(Pet.created_at.desc())
+        else:
+            query = query.order_by(Pet.created_at.asc())
             
+            # PAGINATION
+        offset = (page - 1) * limit
+        query = query.offset(offset).limit(limit)
+        
         return query.all()
     except Exception as e:
         raise HTTPException(

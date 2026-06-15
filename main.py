@@ -40,10 +40,16 @@ def get_pets(
     max_age: int = None,
     owner_id: int = None,
     search: str = None,
+    
+    page: int = 1,
+    limit: int = 10,
+    sort_by: str = None,
+    sort_order: str = "asc",
     db: Session = Depends(get_db)
 ):
     
-    return get_all_pets(db, species, breed, min_age, max_age, owner_id, search)
+    return get_all_pets(db, species, breed, min_age, max_age, owner_id, search,
+                        page, limit, sort_by, sort_order)
 
 
 @app.get("/pets/{pet_id}", tags=["Pets"])
