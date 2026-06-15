@@ -11,7 +11,7 @@ from CRUD.pet_crud import update_pet
 from CRUD.pet_crud import delete_pet
 from CRUD.visit_crud import create_visit
 from Schemas.visit import VisitCreate
-from CRUD.visit_crud import get_visits_by_pet_id
+from CRUD.visit_crud import get_visits_by_pet_id, create_visit, update_visit, delete_visit
 from Models.Owner import Owner
 from Schemas.owner import OwnerCreate
 from CRUD.owner_crud import create_owner
@@ -112,3 +112,26 @@ def create_owner_data(
 def get_owner_pets(owner_id:int, db: Session = Depends(get_db)):
     
     return get_pets_by_owner_id(db, owner_id)
+
+
+@app.put("/visits/{visit_id}", tags = ["Visits"])
+def update_visit_data(
+    visit_id: int,
+    visit_data: VisitCreate,
+    db: Session = Depends(get_db)):
+    return update_visit(
+        db,
+        visit_id,
+        visit_data
+    )
+    
+@app.delete("/visits/{visit_id}", tags=["Visits"])
+def delete_visit_data(
+    visit_id: int,
+    db: Session = Depends(get_db)
+):
+
+    return delete_visit(
+        db,
+        visit_id
+    )
