@@ -19,17 +19,43 @@ from CRUD.owner_crud import get_pets_by_owner_id
 from fastapi import Request
 from fastapi.responses import JSONResponse
 from fastapi.exceptions import HTTPException
+from fastapi import Request
+import time
 
 
 app = FastAPI()
 
+#MIDDLEWARE
+
+@app.middleware("http")
+async def log_request(request: Request, call_next):
+    
+    #record start time
+    start_time = time.time()
+    
+    #process request
+    response = await call_next(request)
+    
+    #calculate response time
+    process_time = time.time() - start_time
+    
+    #print log in terminal
+    print(
+        f"Method: {request.method} | "
+        f"Path: {request.url.path} | "
+        f"Status COde: {response.status_code} | "
+        f"Response time: {process_time: .5f}sec")
+    
+    return response
+
+# GLOBAL EXCEPTION HANDLING
 @app.exception_handler(HTTPException)
 async def custom_http_exception_handler(
     request: Request,
     exc: HTTPException
 ):
     return JSONResponse(
-        status_code=exc.status_code,
+        status_code=exc.status_code,  
         content={
             "success": False,
             "message": exc.detail
