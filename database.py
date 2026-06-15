@@ -7,7 +7,7 @@ DATABASE_URL = settings.DATABASE_URL  #WHERE THE DATABASE IS
 
 engine = create_engine(   #CREATE_ENGINE
     DATABASE_URL,
-    connect_args = {"check_same_thread": False}  #Only the thread that created the connection can use it. But FastAPI handles multiple requests simultaneously. So we disable that restriction
+    #connect_args = {"check_same_thread": False}  #Only the thread that created the connection can use it. But FastAPI handles multiple requests simultaneously. So we disable that restriction
 )
 
 SessionLocal = sessionmaker(  #CREATE DATABASE SESSION
