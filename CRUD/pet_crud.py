@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from Models.Pets import Pet
 from Schemas.pet import PetCreate
 from Models.Visit import Visit
+from datetime import datetime
 
 
 
@@ -47,7 +48,12 @@ def get_all_pets(
     try:
         # pets = db.query(Pet).all()
         # return pets
-        query = db.query(Pet)  #Create the base query for the pet table
+        # query = db.query(Pet)  #Create the base query for the pet table
+        
+        query = db.query(Pet).filter(    #only fetch pets that are not soft deleted
+            Pet.is_deleted == False
+)
+        
         if species:
             query = query.filter(Pet.species == species)
             
@@ -101,9 +107,11 @@ def get_all_pets(
         )
         
 def get_pet_by_id(db, pet_id:int):
-    pet_data = db.query(Pet).filter(Pet.id == pet_id).first()
+    # pet_data = db.query(Pet).filter(Pet.id == pet_id).first()
     
-    
+    pet_data = db.query(Pet).filter(
+    Pet.id == pet_id,
+    Pet.is_deleted == False).first()  #only return pet if it is not soft deleted
     
     if pet_data is None:
         raise HTTPException(
@@ -150,13 +158,19 @@ def delete_pet(db, pet_id: int):
             detail="Pet not found"
         )
 
-    db.query(Visit).filter(
-        Visit.pet_id == pet_id
-    ).delete()
+    # db.query(Visit).filter(
+    #     Visit.pet_id == pet_id
+    # ).delete()
 
-    # Delete pet
-    db.delete(pet_to_delete)
+    # # Delete pet
+    # db.delete(pet_to_delete)
+    # db.commit()
+    
+    pet_to_delete.is_deleted = True
+    pet_to_delete.deleted_at = datetime.utcnow()
+
     db.commit()
+    db.refresh(pet_to_delete)
     return {
-        "message": "Pet and related visits deleted successfully"
+        "message": "Pet soft deleted successfully"
     }

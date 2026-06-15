@@ -21,6 +21,9 @@ def create_owner(db:Session, owner: OwnerCreate):
 
 def get_pets_by_owner_id(db: Session, owner_id: int):
     
-    pets = db.query(Pet).filter(Pet.owner_id == owner_id).all() #Get pet details by owner id
+    # pets = db.query(Pet).filter(Pet.owner_id == owner_id).all() #Get pet details by owner id
+    pets = db.query(Pet).filter(
+    Pet.owner_id == owner_id,
+    Pet.is_deleted == False).all()  #only return active pets for the owner
     
     return pets
