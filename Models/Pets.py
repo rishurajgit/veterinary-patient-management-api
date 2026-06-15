@@ -18,6 +18,9 @@ class Pet(Base):
     
     created_at = Column(DateTime, default = datetime.utcnow)
     
+    # stores when the pet record was last updated
+    updated_at = Column(DateTime,default=datetime.utcnow,onupdate=datetime.utcnow)
+    
     # marks whether the pet is soft deleted or not
     # False = active pet
     # True = deleted pet

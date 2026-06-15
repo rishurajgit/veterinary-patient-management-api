@@ -13,4 +13,7 @@ class Visit(Base):
     notes = Column(Text)
     created_at = Column(DateTime, default = datetime.utcnow)
     
+    # stores when visit data was last updated
+    updated_at = Column(DateTime,default=datetime.utcnow,onupdate=datetime.utcnow)
+    
     Pet = relationship("Pet", back_populates="visits")

@@ -137,8 +137,10 @@ def update_pet(db, pet_id: int, pet_data: PetCreate):
     pet_to_update.species = pet_data.species
     pet_to_update.breed = pet_data.breed
     pet_to_update.age = pet_data.age
-    pet_to_update.owner_name = pet_data.owner_name
-    pet_to_update.owner_phone = pet_data.owner_phone
+    # pet_to_update.owner_name = pet_data.owner_name
+    # pet_to_update.owner_phone = pet_data.owner_phone
+    pet_to_update.owner_id = pet_data.owner_id
+    pet_to_update.updated_at = datetime.utcnow() # update audit field
 
     db.commit()
     db.refresh(pet_to_update)
