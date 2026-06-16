@@ -2,12 +2,16 @@ from sqlalchemy.orm import Session
 from fastapi import HTTPException
 from Models.User import User
 from Schemas.user import UserCreate
-from passlib.context import CryptContext
+# from passlib.context import CryptContext
+from auth import hash_password
 
-pwd_context = CryptContext(
-    schemes=["bcrypt"],
-    deprecated="auto"
-)
+
+# pwd_context = CryptContext(
+#     schemes=["bcrypt"],
+#     deprecated="auto"
+# )
+
+
 
 def create_user( db:Session, user_data: UserCreate):
     
@@ -20,10 +24,14 @@ def create_user( db:Session, user_data: UserCreate):
             detail="Email already exists"
         )
         
-    #hashed password
-    hashed_password = pwd_context.hash(
+##hashed password
+
+    hashed_password = hash_password(
         user_data.password
     )
+    # hashed_password = pwd_context.hash(
+    #     user_data.password
+    # )
     
     #create user object
     new_user = User(
