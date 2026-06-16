@@ -21,7 +21,8 @@ from fastapi.responses import JSONResponse
 from fastapi.exceptions import HTTPException
 from fastapi import Request
 import time
-
+from Schemas.user import UserCreate, UserResponse
+from CRUD.user_crud import create_user
 
 app = FastAPI()
 
@@ -176,3 +177,9 @@ def delete_visit_data(
         db,
         visit_id
     )
+    
+
+@app.post("/auth/register", response_model=UserResponse, tags=["Users"])
+def register_user(user_data:UserCreate, db:Session = Depends(get_db)):
+    
+    return create_user(db, user_data)
