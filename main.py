@@ -25,6 +25,8 @@ from Schemas.user import UserCreate, UserResponse
 from CRUD.user_crud import create_user
 from Schemas.user import UserCreate, UserLogin, UserResponse
 from CRUD.user_crud import create_user, login_user
+from auth import get_current_user, oauth2_scheme
+from fastapi.security import OAuth2PasswordRequestForm
 
 app = FastAPI()
 
@@ -189,7 +191,22 @@ def register_user(user_data:UserCreate, db:Session = Depends(get_db)):
 #login_user
 @app.post("/auth/login",tags=["Users"])
 def login(
+    # form_data : OAuth2PasswordRequestForm = Depends(),
     user_data: UserLogin,
     db: Session = Depends(get_db)
 ):
     return login_user(db, user_data)
+
+@app.get("/auth/user-context",response_model=UserResponse,tags=["Users"])
+def user_context(
+    token: str = Depends(oauth2_scheme),
+    db: Session = Depends(get_db)
+):
+    # token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiODMzZjI2MzMtYjNiYS00YzM3LTg4ZTctN2QwNTI5M2ZlMTZhIiwiZW1haWwiOiJoYXJzaEBleGFtcGxlLmNvbSIsInJvbGUiOiJWRVQiLCJleHAiOjE3ODE3MDE3NzB9.ro9tx-Vqj8J5G_nd_wFUeYmfXg8KUwHR5nEJoto7XH8"
+    return get_current_user(token,db)
+
+# @app.get("/test-token")
+# def test_token(
+#     token: str = Depends(oauth2_scheme)
+# ):
+#     return {"token": token}
