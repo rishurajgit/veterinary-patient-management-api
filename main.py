@@ -16,9 +16,9 @@ from Models.Owner import Owner
 from Schemas.owner import OwnerCreate
 from CRUD.owner_crud import create_owner
 from CRUD.owner_crud import get_pets_by_owner_id
-from fastapi import Request
+from fastapi import Request, HTTPException
 from fastapi.responses import JSONResponse
-from fastapi.exceptions import HTTPException
+from fastapi.exceptions import HTTPException, RequestValidationError
 from fastapi import Request
 import time
 from Schemas.user import UserCreate, UserResponse
@@ -67,7 +67,7 @@ async def log_request(request: Request, call_next):
     
     return response
 
-# GLOBAL EXCEPTION HANDLING
+# GLOBAL EXCEPTION HANDLING(for 401 and 404)
 @app.exception_handler(HTTPException)
 async def custom_http_exception_handler(
     request: Request,
@@ -80,6 +80,36 @@ async def custom_http_exception_handler(
             "message": exc.detail
         }
     )
+    
+#handle validation errors(422)
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(
+    request: Request,
+    exc: RequestValidationError
+):
+    return JSONResponse(
+        status_code=422,
+        content={
+            "success": False,
+            "message": "Validation Error"
+        }
+    )
+
+
+#Handle Unexpected Error(500)
+@app.exception_handler(Exception)
+async def global_exception_handler(
+    request: Request,
+    exc: Exception
+):
+    return JSONResponse(
+        status_code=500,
+        content={
+            "success": False,
+            "message": "Internal Server Error"
+        }
+    )
+
 
 Base.metadata.create_all(bind = engine)
 
