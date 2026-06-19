@@ -23,6 +23,8 @@ from fastapi import Request
 import time
 from Schemas.user import UserCreate, UserResponse
 from CRUD.user_crud import create_user
+from Schemas.user import UserCreate, UserLogin, UserResponse
+from CRUD.user_crud import create_user, login_user
 
 app = FastAPI()
 
@@ -183,3 +185,11 @@ def delete_visit_data(
 def register_user(user_data:UserCreate, db:Session = Depends(get_db)):
     
     return create_user(db, user_data)
+
+#login_user
+@app.post("/auth/login",tags=["Users"])
+def login(
+    user_data: UserLogin,
+    db: Session = Depends(get_db)
+):
+    return login_user(db, user_data)
