@@ -7,7 +7,7 @@ from config import settings
 
 #GET/auth/user-context
 from fastapi.security import OAuth2PasswordBearer
-from fastapi import HTTPException
+from fastapi import HTTPException, Depends
 from sqlalchemy.orm import Session
 
 from database import get_db
@@ -78,7 +78,10 @@ def decode_access_token(token: str):
 
 
 #GET/auth/user-context
-def get_current_user(token: str,db: Session):
+def get_current_user(
+    token: str = Depends(oauth2_scheme),
+    db: Session = Depends(get_db)
+    ):
     print("TOKEN", token)
 
     try:

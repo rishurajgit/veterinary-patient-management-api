@@ -55,12 +55,14 @@ def create_user( db:Session, user_data: UserCreate):
 #login_user
 def login_user(
     db: Session,
-    user_data: UserLogin
+    # user_data: UserLogin
+    email: str,
+    password : str
 ):
     
     # find user by email
     user = db.query(User).filter(
-        User.email == user_data.email
+        User.email == email
     ).first()
 
     # email not found
@@ -72,7 +74,7 @@ def login_user(
 
     # verify password
     if not verify_password(
-        user_data.password,
+        password,
         user.password_hash
     ):
         raise HTTPException(

@@ -72,7 +72,9 @@ Base.metadata.create_all(bind = engine)
 @app.post("/pets", tags=["Pets"])
 def create_pet(
     pet: PetCreate,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    #applying JWT
+    current_user = Depends(get_current_user)
 ):
     return {
         create_pet_db(db, pet)
@@ -111,7 +113,9 @@ def get_single_pet(
 def update_pet_data(
     pet_id: int,
     pet_data: PetCreate,
-    db : Session = Depends(get_db)
+    db : Session = Depends(get_db),
+    #jwt in update
+    current_user = Depends(get_current_user)
 ):
     return update_pet(db, pet_id, pet_data)
 
@@ -119,7 +123,9 @@ def update_pet_data(
 @app.delete("/pets/{pet_id}", tags=["Pets"])
 def delete_pet_data(
     pet_id: int,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    #JWT
+    current_user = Depends(get_current_user)
 ):
     return delete_pet(db, pet_id)
 
@@ -128,7 +134,9 @@ def delete_pet_data(
 def create_visit_data(
     pet_id: int,
     visit: VisitCreate,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    #JWT
+    current_user = Depends(get_current_user)
 ):
 
     return create_visit(
@@ -164,7 +172,10 @@ def get_owner_pets(owner_id:int, db: Session = Depends(get_db)):
 def update_visit_data(
     visit_id: int,
     visit_data: VisitCreate,
-    db: Session = Depends(get_db)):
+    db: Session = Depends(get_db),
+    #JWT
+    current_user = Depends(get_current_user)
+    ):
     return update_visit(
         db,
         visit_id,
@@ -174,7 +185,9 @@ def update_visit_data(
 @app.delete("/visits/{visit_id}", tags=["Visits"])
 def delete_visit_data(
     visit_id: int,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    #JWT
+    current_user = Depends(get_current_user)
 ):
 
     return delete_visit(
@@ -191,11 +204,14 @@ def register_user(user_data:UserCreate, db:Session = Depends(get_db)):
 #login_user
 @app.post("/auth/login",tags=["Users"])
 def login(
-    # form_data : OAuth2PasswordRequestForm = Depends(),
-    user_data: UserLogin,
+    form_data : OAuth2PasswordRequestForm = Depends(),
+    #user_data: UserLogin,
     db: Session = Depends(get_db)
 ):
-    return login_user(db, user_data)
+    return login_user(db,
+                      form_data.username,
+                      form_data.password
+                      )
 
 @app.get("/auth/user-context",response_model=UserResponse,tags=["Users"])
 def user_context(
