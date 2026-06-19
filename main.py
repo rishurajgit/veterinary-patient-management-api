@@ -16,17 +16,33 @@ from Models.Owner import Owner
 from Schemas.owner import OwnerCreate
 from CRUD.owner_crud import create_owner
 from CRUD.owner_crud import get_pets_by_owner_id
-from fastapi import Request
+from fastapi import Request, HTTPException
 from fastapi.responses import JSONResponse
-from fastapi.exceptions import HTTPException
+from fastapi.exceptions import HTTPException, RequestValidationError
 from fastapi import Request
 import time
 from Schemas.user import UserCreate, UserResponse
 from CRUD.user_crud import create_user
 from Schemas.user import UserCreate, UserLogin, UserResponse
 from CRUD.user_crud import create_user, login_user
+from auth import get_current_user, oauth2_scheme
+from fastapi.security import OAuth2PasswordRequestForm
+from logger import logger
+
+
+
 
 app = FastAPI()
+
+#LOGGING
+@app.on_event("startup")
+async def startup_event():
+    logger.info("Application started")
+
+@app.on_event("shutdown")
+async def shutdown_event():
+    logger.info("Application stopped")
+
 
 #MIDDLEWARE
 
@@ -40,7 +56,7 @@ async def log_request(request: Request, call_next):
     response = await call_next(request)
     
     #calculate response time
-    process_time = time.time() - start_time
+    process_time = (time.time() - start_time)
     
     #print log in terminal
     print(
@@ -51,7 +67,7 @@ async def log_request(request: Request, call_next):
     
     return response
 
-# GLOBAL EXCEPTION HANDLING
+# GLOBAL EXCEPTION HANDLING(for 401 and 404)
 @app.exception_handler(HTTPException)
 async def custom_http_exception_handler(
     request: Request,
@@ -64,13 +80,45 @@ async def custom_http_exception_handler(
             "message": exc.detail
         }
     )
+    
+#handle validation errors(422)
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(
+    request: Request,
+    exc: RequestValidationError
+):
+    return JSONResponse(
+        status_code=422,
+        content={
+            "success": False,
+            "message": "Validation Error"
+        }
+    )
+
+
+#Handle Unexpected Error(500)
+@app.exception_handler(Exception)
+async def global_exception_handler(
+    request: Request,
+    exc: Exception
+):
+    return JSONResponse(
+        status_code=500,
+        content={
+            "success": False,
+            "message": "Internal Server Error"
+        }
+    )
+
 
 Base.metadata.create_all(bind = engine)
 
 @app.post("/pets", tags=["Pets"])
 def create_pet(
     pet: PetCreate,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    #applying JWT
+    current_user = Depends(get_current_user)
 ):
     return {
         create_pet_db(db, pet)
@@ -109,7 +157,9 @@ def get_single_pet(
 def update_pet_data(
     pet_id: int,
     pet_data: PetCreate,
-    db : Session = Depends(get_db)
+    db : Session = Depends(get_db),
+    #jwt in update
+    current_user = Depends(get_current_user)
 ):
     return update_pet(db, pet_id, pet_data)
 
@@ -117,7 +167,9 @@ def update_pet_data(
 @app.delete("/pets/{pet_id}", tags=["Pets"])
 def delete_pet_data(
     pet_id: int,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    #JWT
+    current_user = Depends(get_current_user)
 ):
     return delete_pet(db, pet_id)
 
@@ -126,7 +178,9 @@ def delete_pet_data(
 def create_visit_data(
     pet_id: int,
     visit: VisitCreate,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    #JWT
+    current_user = Depends(get_current_user)
 ):
 
     return create_visit(
@@ -162,7 +216,10 @@ def get_owner_pets(owner_id:int, db: Session = Depends(get_db)):
 def update_visit_data(
     visit_id: int,
     visit_data: VisitCreate,
-    db: Session = Depends(get_db)):
+    db: Session = Depends(get_db),
+    #JWT
+    current_user = Depends(get_current_user)
+    ):
     return update_visit(
         db,
         visit_id,
@@ -172,7 +229,9 @@ def update_visit_data(
 @app.delete("/visits/{visit_id}", tags=["Visits"])
 def delete_visit_data(
     visit_id: int,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    #JWT
+    current_user = Depends(get_current_user)
 ):
 
     return delete_visit(
@@ -189,7 +248,25 @@ def register_user(user_data:UserCreate, db:Session = Depends(get_db)):
 #login_user
 @app.post("/auth/login",tags=["Users"])
 def login(
-    user_data: UserLogin,
+    form_data : OAuth2PasswordRequestForm = Depends(),
+    #user_data: UserLogin,
     db: Session = Depends(get_db)
 ):
-    return login_user(db, user_data)
+    return login_user(db,
+                      form_data.username,
+                      form_data.password
+                      )
+
+@app.get("/auth/user-context",response_model=UserResponse,tags=["Users"])
+def user_context(
+    token: str = Depends(oauth2_scheme),
+    db: Session = Depends(get_db)
+):
+    # token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiODMzZjI2MzMtYjNiYS00YzM3LTg4ZTctN2QwNTI5M2ZlMTZhIiwiZW1haWwiOiJoYXJzaEBleGFtcGxlLmNvbSIsInJvbGUiOiJWRVQiLCJleHAiOjE3ODE3MDE3NzB9.ro9tx-Vqj8J5G_nd_wFUeYmfXg8KUwHR5nEJoto7XH8"
+    return get_current_user(token,db)
+
+# @app.get("/test-token")
+# def test_token(
+#     token: str = Depends(oauth2_scheme)
+# ):
+#     return {"token": token}

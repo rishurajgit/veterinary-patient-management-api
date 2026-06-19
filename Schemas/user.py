@@ -1,6 +1,6 @@
 from pydantic import BaseModel, EmailStr,Field
 from Models.User import UserRole
-
+from uuid import UUID
 
 #schema for user registration
 class UserCreate(BaseModel):
@@ -18,7 +18,7 @@ class UserLogin(BaseModel):
     
 #schema of API responses
 class UserResponse(BaseModel):
-    id : str
+    id : UUID
     name: str
     email: str
     role: UserRole
@@ -27,4 +27,3 @@ class UserResponse(BaseModel):
 #convert database objects into response object
 class config:
     from_attributes = True
-    
