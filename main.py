@@ -27,8 +27,22 @@ from Schemas.user import UserCreate, UserLogin, UserResponse
 from CRUD.user_crud import create_user, login_user
 from auth import get_current_user, oauth2_scheme
 from fastapi.security import OAuth2PasswordRequestForm
+from logger import logger
+
+
+
 
 app = FastAPI()
+
+#LOGGING
+@app.on_event("startup")
+async def startup_event():
+    logger.info("Application started")
+
+@app.on_event("shutdown")
+async def shutdown_event():
+    logger.info("Application stopped")
+
 
 #MIDDLEWARE
 
@@ -42,7 +56,7 @@ async def log_request(request: Request, call_next):
     response = await call_next(request)
     
     #calculate response time
-    process_time = time.time() - start_time
+    process_time = (time.time() - start_time)
     
     #print log in terminal
     print(
