@@ -133,7 +133,7 @@ def update_pet(db, pet_id: int, pet_data: PetCreate):
             detail="Pet not found"
         )
 
-    pet_to_update.pet_Name = pet_data.petname
+    pet_to_update.pet_name = pet_data.petname
     pet_to_update.species = pet_data.species
     pet_to_update.breed = pet_data.breed
     pet_to_update.age = pet_data.age
