@@ -79,7 +79,7 @@ pip install -r requirements.txt
 Create a `.env` file:
 
 ```env
-DATABASE_URL=postgresql://username:password@host/database
+DATABASE_URL=your_database_url
 
 JWT_SECRET_KEY=your_secret_key
 
