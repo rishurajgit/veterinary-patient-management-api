@@ -13,9 +13,9 @@ from CRUD.visit_crud import create_visit
 from Schemas.visit import VisitCreate
 from CRUD.visit_crud import get_visits_by_pet_id, create_visit, update_visit, delete_visit
 from Models.Owner import Owner
-from Schemas.owner import OwnerCreate
-from CRUD.owner_crud import create_owner
-from CRUD.owner_crud import get_pets_by_owner_id
+from Schemas.owner import OwnerCreate, OwnerUpdate
+from CRUD.owner_crud import create_owner, update_owner, delete_owner
+from CRUD.owner_crud import get_pets_by_owner_id, get_all_owners, get_owner_by_id
 from fastapi import Request, HTTPException
 from fastapi.responses import JSONResponse
 from fastapi.exceptions import HTTPException, RequestValidationError
@@ -210,6 +210,56 @@ def create_owner_data(
 def get_owner_pets(owner_id:int, db: Session = Depends(get_db)):
     
     return get_pets_by_owner_id(db, owner_id)
+
+
+@app.get("/Owners", tags=["Owners"])
+def get_all_owner_data(
+    search: str | None = None,
+    page: int = 1,
+    limit: int = 10,
+    db: Session = Depends(get_db),
+):
+    return get_all_owners(
+        db=db,
+        search=search,
+        page=page,
+        limit=limit,
+    )
+
+
+@app.get("/Owners/{owner_id}", tags=["Owners"])
+def get_single_owner(
+    owner_id: int,
+    db: Session = Depends(get_db),
+):
+    return get_owner_by_id(
+        db,
+        owner_id,
+    )
+
+
+@app.put("/Owners/{owner_id}", tags=["Owners"])
+def update_owner_data(
+    owner_id: int,
+    owner: OwnerUpdate,
+    db: Session = Depends(get_db),
+):
+    return update_owner(
+        db,
+        owner_id,
+        owner,
+    )
+
+
+@app.delete("/Owners/{owner_id}", tags=["Owners"])
+def delete_owner_data(
+    owner_id: int,
+    db: Session = Depends(get_db),
+):
+    return delete_owner(
+        db,
+        owner_id,
+    )
 
 
 @app.put("/visits/{visit_id}", tags = ["Visits"])

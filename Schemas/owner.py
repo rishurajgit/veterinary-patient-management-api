@@ -8,6 +8,11 @@ class OwnerCreate(BaseModel):
     email : str 
     # created_at : datetime
     
+class OwnerUpdate(BaseModel):
+    name: str | None = None
+    phone: str | None = None
+    email: str | None = None
+    
 class OwnerResponse(OwnerCreate):
     id: int
     name: str 
